@@ -15,7 +15,8 @@ spec:
       containers:
         # this name is only important for logging purposes
         - name: auth
-          image: us.gcr.io/ticketing-dev-392021/auth
+          # image: us.gcr.io/ticketing-dev-392021/auth
+          image: quanological/auth
 ---
 apiVersion: v1
 kind: Service
