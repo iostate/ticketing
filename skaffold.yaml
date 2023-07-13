@@ -1,20 +1,39 @@
+# apiVersion: skaffold/v4beta6
+# kind: Config
+# build:
+#   artifacts:
+#     # - image: us.gcr.io/ticketing-dev-392021/auth
+#     - image: quanological/auth
+#       context: auth
+#       sync:
+#         manual:
+#           - src: "src/**/*.ts"
+#             dest: .
+#       docker:
+#         dockerfile: Dockerfile
+#   local:
+#     push: true
+#   # googleCloudBuild:
+#   #   projectId: ticketing-dev-392021
+# manifests:
+#   rawYaml:
+#     - ./infra/k8s/*
 apiVersion: skaffold/v4beta6
 kind: Config
+manifests:
+  rawYaml:
+  - ./infra/k8s/*
 build:
-  artifacts:
-    # - image: us.gcr.io/ticketing-dev-392021/auth
-    - image: quanological/auth
-      context: auth
-      sync:
-        manual:
-          - src: "src/**/*.ts"
-            dest: .
-      docker:
-        dockerfile: Dockerfile
   local:
     push: false
   # googleCloudBuild:
   #   projectId: ticketing-dev-392021
-manifests:
-  rawYaml:
-    - ./infra/k8s/*
+  artifacts:
+    - image: quanological/auth
+      context: auth
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "src/**/*.ts"
+            dest: .

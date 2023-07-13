@@ -13,10 +13,9 @@ spec:
         app: auth
     spec:
       containers:
-        # this name is only important for logging purposes
         - name: auth
-          # image: us.gcr.io/ticketing-dev-392021/auth
           image: quanological/auth
+          # image: us.gcr.io/ticketing-dev-392021/auth
 ---
 apiVersion: v1
 kind: Service
@@ -24,9 +23,9 @@ metadata:
   name: auth-srv
 spec:
   selector:
-   app: auth
+    app: auth
   ports:
-   - name: auth
-     protocol: TCP
-     port: 3000
-     targetPort: 3000
+    - name: auth
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
