@@ -1,2 +1,7 @@
 **/node_modules
-
+ auth/csr.pem
+auth/key.pem
+auth/server.crt
+auth/csr.pem
+auth/src/local-index.ts
+auth/src/middlewares/verify-jwt.ts
