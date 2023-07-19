@@ -8,4 +8,8 @@ router.get('/api/users/currentuser', currentUser, requireAuth, (req, res) => {
   res.send({ currentUser: req.session?.currentUser || null });
 });
 
+router.get('/api/users/test', (req, res, next) => {
+  res.send({ test: 'SUCCESS OK' });
+});
+
 export { router as currentUserRouter };

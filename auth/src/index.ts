@@ -12,8 +12,10 @@ import { currentUserRouter } from './routes/current-user';
 import { signinRouter } from './routes/signin';
 import { signoutRouter } from './routes/signout';
 import { signupRouter } from './routes/signup';
+import { testTicketRouter } from './routes/test-router';
 import { errorHandler } from './middlewares/error-handler';
 import { NotFoundError } from './errors/not-found-error';
+import { createTicketRouter } from './routes/add-ticket';
 
 // ASYNC FILE READ
 // async function getKeyAndCertificate() {
@@ -46,7 +48,12 @@ app.use(
     secure: true,
   })
 );
+app.post('/api/tickets', (req, res, next) => {
+  res.send({ success: true });
+});
 // ROUTES
+app.use(testTicketRouter);
+app.use(createTicketRouter);
 app.use(currentUserRouter);
 app.use(signinRouter);
 app.use(signoutRouter);
@@ -77,10 +84,10 @@ const start = async () => {
   } catch (err) {
     console.error(err);
   }
-
-  app.listen(3000, () => {
-    console.log('Listening on port 3000!!!!!!!!');
-  });
 };
+
+app.listen(3000, () => {
+  console.log('Listening on port 3000!!!!!!!!');
+});
 
 start();
