@@ -7,10 +7,6 @@ import { User } from '../models/user';
 import { validateRequest } from '../middlewares/validate-request';
 import { BadRequestError } from '../errors/bad-request-error';
 
-import * as dotenv from 'dotenv';
-// dotenv.config({ path: '../../.env' });
-dotenv.config();
-
 const router = express.Router();
 
 router.post(
@@ -22,7 +18,6 @@ router.post(
   validateRequest,
   async (req: Request, res: Response) => {
     const { email, password } = req.body;
-    console.log(`email: ${email}\npassword: ${password}`);
 
     const existingUser = await User.findOne({ email });
     if (!existingUser) {
@@ -34,7 +29,6 @@ router.post(
       throw new BadRequestError('Invalid password');
     }
 
-    console.log(process.env.JWT_KEY);
     // Generate JWT
     const userJwt = jwt.sign(
       {
@@ -43,19 +37,10 @@ router.post(
       },
       process.env.JWT_KEY as string
     );
-
     // Store it on session object
-    req.session = {
-      jwt: userJwt,
-    };
+    req.session = { jwt: userJwt };
 
-    console.log('got here');
-
-    res.status(200).send({
-      existingUser: existingUser,
-      jwt: userJwt,
-      session: req.session,
-    });
+    res.status(200).send(existingUser);
   }
 );
 
