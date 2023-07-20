@@ -41,11 +41,10 @@ app.set('trust proxy', true);
 
 app.use(
   cookieSession({
-    name: 'express',
     signed: false,
     keys: ['key1', 'key2'],
     // credentials: true
-    secure: true,
+    secure: process.env.NODE_ENV !== 'test', // jest automatically sets this to test
   })
 );
 // ROUTES
