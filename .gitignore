@@ -5,3 +5,4 @@ auth/server.crt
 auth/csr.pem
 auth/src/local-index.ts
 auth/src/middlewares/verify-jwt.ts
+event-bus/
