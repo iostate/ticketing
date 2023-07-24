@@ -37,3 +37,11 @@ build:
         manual:
           - src: "src/**/*.ts"
             dest: .
+    - image: quanological/ticketclient
+      context: client
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "**/*.js"
+            dest: .

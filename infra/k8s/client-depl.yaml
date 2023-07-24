@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client-depl
+spec:
+  replicas: 1
+  # sshows the set of pods that the deployment needs to manage
+  selector:
+    matchLabels:
+      app: client
+  template:
+    metadata:
+      labels:
+        app: client
+    spec:
+      containers:
+        - name: client
+          image: quanological/ticketclient
+          # env:
+          #   - name: JWT_KEY
+          #     valueFrom:
+          #       secretKeyRef:
+          #         name: jwt-secret
+          #         key: JWT_KEY
+          # image: us.gcr.io/ticketing-dev-392021/auth
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: client-srv
+spec:
+# finds the pod that the service is going to govern requests to  
+  selector:
+    app: client
+  ports:
+    - name: client
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
