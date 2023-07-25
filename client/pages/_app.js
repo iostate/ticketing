@@ -1,7 +1,13 @@
 import 'bootstrap/dist/css/bootstrap.css';
 import buildClient from '../api/build-client';
-const AppComponent = ({ Component, pageProps }) => {
-  return <Component {...pageProps} />;
+import Header from '../components/header';
+const AppComponent = ({ Component, pageProps, currentUser }) => {
+  return (
+    <div>
+      <Header currentUser={currentUser} />
+      <Component {...pageProps} />
+    </div>
+  );
 };
 
 // getInitialProps for a Custom App component
@@ -12,11 +18,16 @@ AppComponent.getInitialProps = async (Context) => {
   const client = buildClient(Context.ctx);
   const { data } = await client.get('/api/users/currentuser');
 
+  // create pattern that runs getInitialProps
+  // for any Component child of AppComponent
   // returns currentUser
-  const pageProps = await Context.Component.getInitialProps(Context.ctx);
-  console.log(pageProps);
+  let pageProps = {};
+  if (Context.Component.getInitialProps) {
+    pageProps = await Context.Component.getInitialProps(Context.ctx);
+  }
 
-  return data;
+  // ...data = {currentUser}
+  return { pageProps, ...data };
 };
 
 export default AppComponent;
