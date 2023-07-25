@@ -3,17 +3,17 @@ import buildClient from '../api/build-client';
 import Link from 'next/link';
 import Router from 'next/router';
 const Landing = ({ currentUser }) => {
-  console.log(currentUser);
-  return (
+  return currentUser ? (
     <div>
       <h1>Landing Page</h1>
-      <Link href='/auth/signup'>
-        <button type='button' class='btn btn-link'>
-          Sign Up
-        </button>
-      </Link>
-      {/* <Search /> */}
-      {/* {currentUser} */}
+      <h2>You are currently signed in</h2>
+      <h3>Links</h3>
+      <Link href='/api/users/signout'>Sign Out</Link>
+    </div>
+  ) : (
+    <div>
+      <h1>Landing Page</h1>
+      <h2>You are currently not signed in</h2>
     </div>
   );
 };
