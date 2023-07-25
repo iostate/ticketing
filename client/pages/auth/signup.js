@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
+import Router from 'next/router';
 import useRequest from '../../hooks/use-request';
 // import { doRequest, errors} from '../../hooks/use-request';
 
@@ -16,6 +17,7 @@ export default () => {
     url: '/api/users/signup',
     method: 'post',
     body: { email, password },
+    onSuccess: () => Router.push('/'),
   });
   // const [errors, setErrors] = useState([]);
   const [passwordValidationMessage, setPasswordValidationMessage] = useState('');
@@ -23,12 +25,8 @@ export default () => {
 
   const onSubmit = async (event) => {
     event.preventDefault();
-    // try {
-    //   await doRequest['post']('/api/users/signup', {
-    //     email,
-    //     password
-    //   });
-    doRequest();
+    await doRequest();
+    // Router.push('/');
   };
   // const onSubmit = async (event) => {
   //   event.preventDefault();
