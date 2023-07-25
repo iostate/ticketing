@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import { body } from 'express-validator';
 
 import { Ticket } from '../models/tickets';
-import { requireAuth } from '../errors/require-auth';
+import { requireAuth } from '../middlewares/require-auth';
 import { validateRequest } from '../middlewares/validate-request';
 import { currentUser } from '../middlewares/current-user';
 import { NotFoundError } from '../errors/not-found-error';
