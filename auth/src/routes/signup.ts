@@ -5,9 +5,9 @@ import * as dotenv from 'dotenv';
 dotenv.config({ path: '../../.env' });
 
 import { User } from '../models/user';
-import { RequestValidationError } from '../errors/request-validation-error';
-import { BadRequestError } from '../errors/bad-request-error';
-import { validateRequest } from '../middlewares/validate-request';
+import { RequestValidationError } from '@sgtickets3/common';
+import { BadRequestError } from '@sgtickets3/common';
+import { validateRequest } from '@sgtickets3/common';
 
 const router = express.Router();
 

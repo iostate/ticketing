@@ -2,10 +2,10 @@ import express, { Request, Response } from 'express';
 import { body } from 'express-validator';
 
 import { Ticket } from '../models/tickets';
-import { requireAuth } from '../middlewares/require-auth';
-import { validateRequest } from '../middlewares/validate-request';
-import { currentUser } from '../middlewares/current-user';
-import { NotFoundError } from '../errors/not-found-error';
+import { requireAuth } from '@sgtickets3/common';
+import { validateRequest } from '@sgtickets3/common';
+import { currentUser } from '@sgtickets3/common';
+import { NotFoundError } from '@sgtickets3/common';
 
 const router = express.Router();
 

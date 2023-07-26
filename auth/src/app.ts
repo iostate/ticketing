@@ -13,8 +13,8 @@ import { signinRouter } from './routes/signin';
 import { signoutRouter } from './routes/signout';
 import { signupRouter } from './routes/signup';
 import { testTicketRouter } from './routes/test-router';
-import { errorHandler } from './middlewares/error-handler';
-import { NotFoundError } from './errors/not-found-error';
+import { errorHandler } from '@sgtickets3/common';
+import { NotFoundError } from '@sgtickets3/common';
 import { createTicketRouter } from './routes/add-ticket';
 
 // ASYNC FILE READ
