@@ -1,27 +1,17 @@
-// this file is for running this service locally
-// grabs the secrets from disk
 import express from 'express';
 import 'express-async-errors';
 import { json } from 'body-parser';
 import mongoose from 'mongoose';
 import cookieSession from 'cookie-session';
 
-// ASYNC FILE READ
-// async function getKeyAndCertificate() {
-//   try {
-//     const key = await fs.readFile('../../localhost-key.pem');
-//     const certificate = await fs.readFile('../../localhost.pem');
-//     return { key, certificate };
-//   } catch (err) {
-//     console.log(err);
-//   }
-// }
-// getKeyAndCertificate().then((data) => console.log(data));
+import { currentUser } from '@sgtickets3/common';
+import { errorHandler } from '@sgtickets3/common';
+import { NotFoundError } from '@sgtickets3/common';
 
-// HTTPS CERTIFICATES AND KEYS
-// const httpsKey = fs.readFileSync('../../key.pem', 'utf-8');
-// const httpsCertificate = fs.readFileSync('../../server.crt', 'utf-8');
-// const keyAndCertificate = { key: httpsKey, cert: httpsCertificate };
+import { createTicketRouter } from './routes/new';
+import { findTicketRouter } from './routes/show';
+import { indexTicketsRouter } from './routes';
+import { updateTicketRouter } from './routes/update';
 
 const app = express();
 
@@ -31,17 +21,17 @@ app.set('trust proxy', true);
 app.use(
   cookieSession({
     signed: false,
-    keys: ['key1', 'key2'],
-    // credentials: true
     secure: process.env.NODE_ENV !== 'test', // jest automatically sets this to test
   })
 );
+
+// user must be verified to access the following routers
+app.use(currentUser);
 // ROUTES
 app.use(createTicketRouter);
-app.use(currentUserRouter);
-app.use(signinRouter);
-app.use(signoutRouter);
-app.use(signupRouter);
+app.use(findTicketRouter);
+app.use(indexTicketsRouter);
+app.use(updateTicketRouter);
 
 // CATCH ALL ROUTE
 app.all('*', async (req, res) => {

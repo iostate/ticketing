@@ -16,11 +16,23 @@ spec:
         - name: tickets
           image: quanological/tickets
           env:
+            # - name: JWT_KEY
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: jwt-secret
+            #       key: JWT_KEY
+            - name: MONGO_URI
+              value: mongodb://tickets-mongo-srv:27017/tickets
             - name: JWT_KEY
               valueFrom:
                 secretKeyRef:
                   name: jwt-secret
                   key: JWT_KEY
+              # valueFrom:
+                # secretKeyRef:
+                  
+
+              # value: mongodb://tickets-mongo-srv:27017/tickets
           # image: us.gcr.io/ticketing-dev-392021/auth
 ---
 apiVersion: v1

@@ -46,7 +46,7 @@ build:
           - src: "**/*.js"
             dest: .
     - image: quanological/tickets
-      context: auth
+      context: tickets
       docker:
         dockerfile: Dockerfile
       sync:
