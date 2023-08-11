@@ -4,7 +4,7 @@ import { currentUser } from '@sgtickets3/common';
 const router = express.Router();
 
 router.get('/api/users/currentuser', currentUser, (req, res) => {
-  res.send({ currentUser: req.session?.currentUser || null });
+  res.send({ currentUser: req.currentUser || null });
 });
 
 router.get('/api/users/test', (req, res, next) => {

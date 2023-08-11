@@ -35,10 +35,6 @@ it('should return a 400 when an incorrect password is supplied', async () => {
   await request(app).post(signInRoute).send(invalidCredentials).expect(400);
 });
 
-// it('should return an error stating that the user is already logged in', async () => {
-
-// })
-
 it('should return a 400 upon invalid email and password', async () => {
   await request(app)
     .post(signInRoute)

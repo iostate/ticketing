@@ -64,6 +64,5 @@ it('should set a cookie upon successful signup', async () => {
     email: 'qmtruong92@gmail.com',
     password: 'testpassword',
   });
-  const cookies = response.headers['Set-Cookie'];
   expect(response.get('Set-Cookie')).toBeDefined();
 });
