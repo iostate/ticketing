@@ -1,3 +1,8 @@
+/**
+ * Testing the automatic load balancing feature
+ * of NATS.
+ */
+
 import nats, { Message } from 'node-nats-streaming';
 import { randomBytes } from 'crypto';
 console.clear();
@@ -11,15 +16,11 @@ stan.on('connect', () => {
 
   console.log('Listenening on NATS server');
 
-  const subscriptionOptions = stan
-    .subscriptionOptions()
-    .setManualAckMode(true)
-    .setDeliverAllAvailable()
-    .setDurableName('accounting-service');
+  const subscriptionOptions = stan.subscriptionOptions().setManualAckMode(true);
 
   const subscription = stan.subscribe(
     'ticket:created',
-    'queue-group-name',
+    'orders-service-queue-group',
     subscriptionOptions
   );
 

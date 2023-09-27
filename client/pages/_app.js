@@ -1,10 +1,10 @@
 import 'bootstrap/dist/css/bootstrap.css';
 import buildClient from '../api/build-client';
-import Header from '../components/header';
+// import Header from '../components/header';
 const AppComponent = ({ Component, pageProps, currentUser }) => {
   return (
     <div>
-      <Header currentUser={currentUser} />
+      {/* <Header currentUser={currentUser} /> */}
       <Component {...pageProps} />
     </div>
   );
@@ -16,7 +16,9 @@ const AppComponent = ({ Component, pageProps, currentUser }) => {
 AppComponent.getInitialProps = async (Context) => {
   // console.log(Object.keys(ctx.req));
   const client = buildClient(Context.ctx);
+  // const { data } = await client.get('/api/users/currentuser');
   const { data } = await client.get('/api/users/currentuser');
+  // const data = {};
 
   // create pattern that runs getInitialProps
   // for any Component child of AppComponent
