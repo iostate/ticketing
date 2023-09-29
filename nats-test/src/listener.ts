@@ -1,36 +1,18 @@
-import nats, { Message } from 'node-nats-streaming';
+import nats from 'node-nats-streaming';
 import { randomBytes } from 'crypto';
 console.clear();
 const clientId = randomBytes(4).toString('hex');
+// client
 const stan = nats.connect('ticketing', clientId, {
   url: 'http://localhost:4222',
 });
+import { TicketUpdateListener } from './ticketUpdateListener';
 
 stan.on('connect', () => {
   stan.on('close', () => process.exit());
 
   console.log('Listenening on NATS server');
-
-  const subscriptionOptions = stan
-    .subscriptionOptions()
-    .setManualAckMode(true)
-    .setDeliverAllAvailable()
-    .setDurableName('accounting-service');
-
-  const subscription = stan.subscribe(
-    'ticket:created',
-    'queue-group-name',
-    subscriptionOptions
-  );
-
-  subscription.on('message', (msg: Message) => {
-    const data = msg.getData();
-    if (typeof data === 'string') {
-      console.log(`Event Received #${msg.getSequence()}\nEvent Data: ${data}`);
-    }
-
-    msg.ack();
-  });
+  new TicketUpdateListener(stan).listen();
 });
 
 process.on('SIGNINT', () => stan.close());
