@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "publish": "ts-node-dev --rs --notify false src/publisher.ts",
-    "listen": "ts-node-dev --rs --notify false src/listener.ts"
+    "listen": "ts-node-dev --rs --notify false src/listener.ts",
+    "ticket-update-listen": "ts-node-dev --rs --notify false src/ticketUpdateListener.ts"
   },
   "keywords": [],
   "author": "",
