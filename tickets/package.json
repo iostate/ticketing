@@ -18,7 +18,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@sgtickets3/common": "^1.0.7",
+    "@sgtickets3/common": "^1.0.14",
     "@types/express": "^4.17.17",
     "cookie-session": "1.4.0",
     "dotenv": "^16.3.1",
