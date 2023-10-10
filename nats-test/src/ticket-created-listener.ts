@@ -2,8 +2,8 @@ import { Listener } from './events/base-listener';
 import { randomBytes } from 'crypto';
 import stan, { Stan } from 'node-nats-streaming';
 
-import { TicketCreatedEvent } from './ticket-created-event';
-import { Subjects } from './subjects';
+import { TicketCreatedEvent } from './events/ticket-created-event';
+import { Subjects } from './events/subjects';
 
 export class TicketUpdateListener extends Listener<TicketCreatedEvent> {
   readonly subject: Subjects.TicketCreated = Subjects.TicketCreated;

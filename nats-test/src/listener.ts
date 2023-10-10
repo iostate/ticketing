@@ -1,3 +1,8 @@
+/**
+ * Must perform port forwarding to access client.
+ *
+ * Command: kubectl port-forward nats-depl-dfc688ffd-qqt5l 4222:4222
+ */
 import nats from 'node-nats-streaming';
 import { randomBytes } from 'crypto';
 console.clear();

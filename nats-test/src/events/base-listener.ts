@@ -1,6 +1,6 @@
 import { Stan, Message } from 'node-nats-streaming';
-import { TicketCreatedEvent } from '../ticket-created-event';
-import { Subjects } from '../subjects';
+import { TicketCreatedEvent } from './ticket-created-event';
+import { Subjects } from './subjects';
 
 interface Event {
   subject: Subjects;

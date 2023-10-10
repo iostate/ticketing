@@ -1,6 +1,11 @@
+/**
+ * Must perform port forwarding to access client.
+ *
+ * Command: kubectl port-forward nats-depl-dfc688ffd-qqt5l 4222:4222
+ */
 import nats from 'node-nats-streaming';
 import { TicketCreatedPublisher } from './ticket-created-publisher';
-import { Subjects } from './subjects';
+import { Subjects } from './events/subjects';
 console.clear();
 
 const stan = nats.connect('ticketing', 'abc', {

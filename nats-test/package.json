@@ -9,6 +9,12 @@
     "listen": "ts-node-dev --rs --notify false src/listener.ts",
     "ticket-update-listen": "ts-node-dev --rs --notify false src/ticketUpdateListener.ts"
   },
+  "dependencies": {
+    "@types/node": "^20.4.2",
+    "node-nats-streaming": "^0.3.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.0.4"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC"
