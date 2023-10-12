@@ -1,7 +1,8 @@
 import request from 'supertest';
 import { app } from '../../app';
 import mongoose from 'mongoose';
-const validTicketId = new mongoose.Types.ObjectId().toHexString();
+
+jest.mock('../../nats-wrapper');
 
 it('should return a 404 if the provided id does not exist', async () => {
   // Create a ticket with an ID that does not exist
