@@ -2,7 +2,11 @@ import express, { Request, Response, NextFunction } from 'express';
 import { NotFoundError, requireAuth, validateRequest } from '@sgtickets3/common';
 import { body } from 'express-validator';
 import { Ticket } from '../models/ticket';
-// import { requireAuth } from '@sgtickets/common';
+
+import { natsWrapper } from '../nats-wrapper';
+
+import { TicketCreatedPublisher } from '../events/publisher/ticket-created-publisher';
+
 const router = express.Router();
 
 router.post(
@@ -14,7 +18,6 @@ router.post(
   ],
   validateRequest,
   async (req: Request, res: Response, next: NextFunction) => {
-    console.log(req.body);
     const { title, price } = req.body;
     // const { id } = req.currentUser!;
     const newTicket = Ticket.build({
@@ -23,10 +26,20 @@ router.post(
       userId: req.currentUser!.id,
     });
     await newTicket.save();
-    console.log(newTicket.id);
 
-    // console.log(req.currentUser);
-    // console.log(req.session);
+    // START PUBLISHER
+    // NOTE: do we want to await this operation?
+    // Ensure that the data is consistent with what is saved to the database
+    // since there are MongoDB hooks for sanitization (pre-save)
+    // we do want to await this. Why? We are awaiting the creation of the Document
+    // to mongodb
+    await new TicketCreatedPublisher(natsWrapper.client).publish({
+      id: newTicket.id,
+      title: newTicket.title,
+      price: newTicket.price,
+      userId: newTicket.userId,
+    });
+
     res.status(201).json(newTicket);
   }
 );

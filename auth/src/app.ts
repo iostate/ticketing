@@ -21,7 +21,6 @@ app.set('trust proxy', true);
 app.use(
   cookieSession({
     signed: false,
-    keys: ['key1', 'key2'],
     // jest sets to test automatically
     secure: process.env.NODE_ENV !== 'test',
   })

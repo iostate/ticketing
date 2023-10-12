@@ -1,13 +1,13 @@
-import { Listener } from './events/base-listener';
+import { Listener } from './base-listener';
 import { randomBytes } from 'crypto';
 import stan, { Stan } from 'node-nats-streaming';
 
-import { TicketCreatedEvent } from './events/ticket-created-event';
-import { Subjects } from './events/subjects';
+import { TicketCreatedEvent } from './ticket-created-event';
+import { Subjects } from './subjects';
 
 export class TicketUpdateListener extends Listener<TicketCreatedEvent> {
   readonly subject: Subjects.TicketCreated = Subjects.TicketCreated;
-  queueGroupName = 'queue-group-name';
+  queueGroupName = 'payments-service';
 
   constructor(client: Stan) {
     super(client);
@@ -15,9 +15,11 @@ export class TicketUpdateListener extends Listener<TicketCreatedEvent> {
     // this.queueGroupName = queueGroupName;
   }
   onMessage(data: TicketCreatedEvent['data'], msg: stan.Message): void {
-    console.log(data.id);
-    console.log(data.title);
-    console.log(data.price);
+    console.log('Event Received!');
+    console.log(data);
+    // console.log(data.id);
+    // console.log(data.title);
+    // console.log(data.price);
 
     msg.ack();
   }

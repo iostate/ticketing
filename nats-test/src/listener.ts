@@ -11,7 +11,7 @@ const clientId = randomBytes(4).toString('hex');
 const stan = nats.connect('ticketing', clientId, {
   url: 'http://localhost:4222',
 });
-import { TicketUpdateListener } from './ticketCreatedListener';
+import { TicketUpdateListener } from './events/ticket-created-listener';
 
 stan.on('connect', () => {
   stan.on('close', () => process.exit());
