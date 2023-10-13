@@ -15,12 +15,20 @@ spec:
       containers:
         - name: tickets
           image: quanological/tickets
+          # resources:
+          #   limits:
+          #     cpu: 1gb
+          #     memory: 256mb
           env:
-            # - name: JWT_KEY
-            #   valueFrom:
-            #     secretKeyRef:
-            #       name: jwt-secret
-            #       key: JWT_KEY
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef: 
+                  fieldPath:
+                    metadata.name
+            - name: NATS_URL
+              value: 'http://nats-srv:4222'
+            - name: NATS_CLUSTER_ID
+              value: ticketing
             - name: MONGO_URI
               value: mongodb://tickets-mongo-srv:27017/tickets
             - name: JWT_KEY
@@ -28,12 +36,6 @@ spec:
                 secretKeyRef:
                   name: jwt-secret
                   key: JWT_KEY
-              # valueFrom:
-                # secretKeyRef:
-                  
-
-              # value: mongodb://tickets-mongo-srv:27017/tickets
-          # image: us.gcr.io/ticketing-dev-392021/auth
 ---
 apiVersion: v1
 kind: Service

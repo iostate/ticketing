@@ -13,6 +13,7 @@ jest.mock('../nats-wrapper');
 let mongo: any;
 // runs before all tests
 beforeAll(async () => {
+  jest.clearAllMocks();
   mongo = await MongoMemoryServer.create();
   const uri = mongo.getUri();
   await mongoose.connect(uri, {});
