@@ -28,8 +28,8 @@ app.use(
 // user must be verified to access the following routers
 app.use(currentUser);
 // ROUTES
+app.use(deleteOrderRouter); // /api/orders/:id
 app.use(getOrderRouter); // /api/orders/:id
-app.use(deleteOrderRouter); // /api/orders
 app.use(newOrderRouter); // /api/orders
 app.use(indexOrderRouter); // /api/orders
 
