@@ -6,6 +6,8 @@
 import { NotAuthorizedError, NotFoundError, requireAuth } from '@sgtickets3/common';
 import express from 'express';
 import { Order, OrderStatus } from '../models/order';
+import { OrderCancelledPublisher } from '../events/publisher/order-cancelled-publisher';
+import { natsWrapper } from '../nats-wrapper';
 
 const router = express.Router();
 
@@ -13,7 +15,7 @@ router.delete('/api/orders/:orderId', requireAuth, async (req, res) => {
   const { orderId } = req.params;
 
   // const order = await Order.findById(orderId).populate('ticket');
-  const order = await Order.findById(orderId);
+  const order = await Order.findById(orderId).populate('ticket');
   // NotFound
   if (!order) {
     throw new NotFoundError();
@@ -25,6 +27,15 @@ router.delete('/api/orders/:orderId', requireAuth, async (req, res) => {
   // set order status to cancelled
   order.status = OrderStatus.Cancelled;
   await order.save();
+
+  new OrderCancelledPublisher(natsWrapper.client).publish({
+    id: order.id,
+    userId: order.userId,
+    ticket: {
+      id: order.ticket.id,
+      price: order.ticket.price,
+    },
+  });
 
   res.status(204).send();
 });

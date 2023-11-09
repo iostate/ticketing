@@ -4,6 +4,8 @@ import { body } from 'express-validator';
 import { Order, OrderStatus } from '../models/order';
 import { Ticket } from '../models/ticket';
 import { BadRequestError, NotFoundError, requireAuth } from '@sgtickets3/common';
+import { OrderCreatedPublisher } from '../events/publisher/order-created-publisher';
+import { natsWrapper } from '../nats-wrapper';
 
 const EXPIRATION_WINDOW_SECONDS = 15 * 60;
 
@@ -51,6 +53,18 @@ router.post(
     });
     // save to database
     await order.save();
+
+    // Publish Order to let event bus know that an Order has been created
+    new OrderCreatedPublisher(natsWrapper.client).publish({
+      id: order.id,
+      userId: order.userId,
+      status: order.status,
+      expiresAt: order.expiresAt.toISOString(),
+      ticket: {
+        id: order.ticket.id,
+        price: order.ticket.price,
+      },
+    });
 
     res.status(201).json(order);
   }

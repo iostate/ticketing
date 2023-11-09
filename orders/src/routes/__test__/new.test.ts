@@ -86,7 +86,19 @@ it('should return a 200 code if the ticket has successfully been created', async
   expect(documentCount).toEqual(1);
 });
 
-it.todo('emits an order created event');
+it('should publish event when order is created', async () => {
+  const ticket = await global.buildTicket();
+  const user = global.signin();
+  const { body: order } = await request(app)
+    .post('/api/orders')
+    .set('Cookie', user)
+    .send({
+      ticketId: ticket.id,
+    })
+    .expect(201);
+
+  expect(natsWrapper.client.publish).toHaveBeenCalled();
+});
 
 // it('has a route handler listening to /api/orders for post requests', async () => {
 //   const response = await request(app).post('/api/orders').send();

@@ -3,6 +3,7 @@ import { app } from '../../app';
 import { OrderStatus } from '@sgtickets3/common';
 import mongoose from 'mongoose';
 import { Order, OrderDoc } from '../../models/order';
+import { natsWrapper } from '../../nats-wrapper';
 
 it('Should set an order status to cancelled', async () => {
   const ticket = await global.buildTicket();
@@ -29,7 +30,26 @@ it('Should set an order status to cancelled', async () => {
   // expect(deletedOrder.status).toEqual(204);
 });
 
-it.todo('emits an order cancelled event');
+it('should publish event when order is cancelled', async () => {
+  const ticket = await global.buildTicket();
+  const user = global.signin();
+  const { body: order } = await request(app)
+    .post('/api/orders')
+    .set('Cookie', user)
+    .send({
+      ticketId: ticket.id,
+    })
+    .expect(201);
+
+  await request(app)
+    .delete(`/api/orders/${order.id}`)
+    .set('Cookie', user)
+    .send()
+    .expect(204);
+
+  // expect(natsWrapper.client.publish).not.toBeCalled();
+  expect(natsWrapper.client.publish).toBeCalled();
+});
 // import { natsWrapper } from '../../nats-wrapper';
 // it('should return a 404 if the provided id does not exist', async () => {
 //   // Create a ticket with an ID that does not exist
