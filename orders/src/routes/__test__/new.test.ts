@@ -23,8 +23,11 @@ it('Should return a 404 if ticket is not found', async () => {
 // Create a ticket with reserved status on it
 it('Should return a 400 if ticket is already reserved', async () => {
   const cookie = global.signin();
+  const ticketId = new mongoose.Types.ObjectId().toString();
+
   // Create Ticket with Reserved status
   const ticket = Ticket.build({
+    id: ticketId,
     title: 'Concert',
     price: 20,
   });
@@ -54,11 +57,7 @@ it('should return a 200 code if the ticket has successfully been created', async
   const cookie = global.signin();
 
   // doesn't have ticket, expiration date
-  const ticket = Ticket.build({
-    title: 'concert',
-    price: 20,
-  });
-  await ticket.save();
+  const ticket = await global.buildTicket();
 
   // create order through API
   // ticket must already be created

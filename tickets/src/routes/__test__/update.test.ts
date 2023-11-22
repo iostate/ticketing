@@ -3,6 +3,7 @@ import { app } from '../../app';
 import mongoose from 'mongoose';
 
 import { natsWrapper } from '../../nats-wrapper';
+import { Ticket } from '../../models/ticket';
 it('should return a 404 if the provided id does not exist', async () => {
   // Create a ticket with an ID that does not exist
   const ticketId = new mongoose.Types.ObjectId().toHexString();
@@ -25,6 +26,39 @@ it('should return a 401 Error if the user is not authenticated', async () => {
       price: 300,
     })
     .expect(401);
+});
+
+it('should return a 400 if the ticket is reserved', async () => {
+  const cookie = global.signin();
+
+  // Create a ticket
+  const response = await request(app)
+    .post('/api/tickets')
+    .send({
+      title: 'Ticket Test',
+      price: 300,
+    })
+    .set('Cookie', cookie)
+    .expect(201);
+
+  console.log(response.body.id);
+
+  // find ticket
+  const ticket = await Ticket.findById(response.body.id);
+
+  // set orderId on ticket
+  ticket!.set({ orderId: 'asdf' });
+
+  // save ticket
+  await ticket!.save();
+  // make put request on ticket, expect 400
+  await request(app)
+    .put(`/api/tickets/${ticket!.id}`)
+    .set('Cookie', cookie)
+    .send({
+      price: 301010,
+    })
+    .expect(400);
 });
 
 it('returns a 401 if the user does not own the ticket', async () => {

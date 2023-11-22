@@ -16,8 +16,9 @@ global.buildTicket = async function (): Promise<TicketDoc> {
    *
    * @returns TicketDoc A Ticket Document.
    */
-  // const buildTicket = async (): Promise<TicketDoc> => {
+  const ticketId = new mongoose.Types.ObjectId().toString();
   const ticket = Ticket.build({
+    id: ticketId,
     title: 'concert',
     price: 20,
   });

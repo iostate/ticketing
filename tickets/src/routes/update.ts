@@ -2,9 +2,10 @@ import express, { Request, Response } from 'express';
 import { body } from 'express-validator';
 import {
   validateRequest,
-  NotFoundError,
+  NotFoundError, // 404
   requireAuth,
-  NotAuthorizedError,
+  NotAuthorizedError, // 401
+  BadRequestError, // 400
 } from '@sgtickets3/common';
 import { Ticket } from '../models/ticket';
 
@@ -29,6 +30,11 @@ router.put(
     if (!ticket) {
       throw new NotFoundError(); // 404
     }
+
+    if (ticket.orderId) {
+      throw new BadRequestError('cannot edit a reserved ticket'); // 400 error
+    }
+
     if (req.currentUser!.id !== ticket.userId) {
       throw new NotAuthorizedError(); // 401
     }
@@ -41,6 +47,7 @@ router.put(
     // await natsWrapper.connect('ticketing', 'abcd', 'http://nats-srv:4222');
     new TicketUpdatedPublisher(natsWrapper.client).publish({
       id: ticket.id,
+      version: ticket.version,
       title: ticket.title,
       price: ticket.price,
       userId: ticket.userId,

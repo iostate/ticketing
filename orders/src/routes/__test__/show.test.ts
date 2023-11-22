@@ -10,12 +10,7 @@ import mongoose from 'mongoose';
  * @returns TicketDoc A Ticket Document.
  */
 const buildTicket = async (): Promise<TicketDoc> => {
-  const ticket = Ticket.build({
-    title: 'concert',
-    price: 20,
-  });
-
-  await ticket.save();
+  const ticket = await global.buildTicket();
   return ticket;
 };
 

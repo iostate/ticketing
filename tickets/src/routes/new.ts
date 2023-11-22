@@ -35,6 +35,8 @@ router.post(
     // to mongodb
     await new TicketCreatedPublisher(natsWrapper.client).publish({
       id: newTicket.id,
+      version: newTicket.version,
+      // version: newTicket.version + 1,
       title: newTicket.title,
       price: newTicket.price,
       userId: newTicket.userId,

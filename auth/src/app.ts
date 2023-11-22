@@ -4,6 +4,7 @@ import { json } from 'body-parser';
 import mongoose from 'mongoose';
 import cookieSession from 'cookie-session';
 
+console.log('Delete this later... Experiencing a build issue in kubernetes');
 // Routes
 import { currentUserRouter } from './routes/current-user';
 import { signinRouter } from './routes/signin';
