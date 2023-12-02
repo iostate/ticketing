@@ -5,7 +5,7 @@ import { TicketUpdatedListener } from '../ticket-updated-listener';
 
 import { TicketUpdatedEvent } from '@sgtickets3/common';
 import { Ticket } from '../../../models/ticket';
-import mongoose from 'mongoose';
+import mongoose, { Error } from 'mongoose';
 
 const setup = async () => {
   // @ts-ignore
@@ -55,8 +55,25 @@ it('does not ack message if skipped version number is found', async () => {
   data.version = 20;
 
   try {
+    // Inside of this onMessage will call Ticket.findByEvent(data.id, data.version) which will cause an Error to be thrown since the Ticket is not found. It should also not update the ticket whose event is being received.
     await listener.onMessage(data, msg);
-  } catch (err) {}
+  } catch (err) {
+    const knownError = err as Error;
+    console.log(typeof knownError);
+    console.log(knownError);
+    let errMsg;
+    let errName;
+    if (knownError instanceof Error) {
+      let errMsg = knownError.message;
+      let errName = knownError.name;
+    }
+    console.log(errMsg);
+    console.log(errName);
+  }
+
+  // Find Ticket by event and ID
+
+  // Expect that the ticket have version of 21
 
   expect(msg.ack).not.toHaveBeenCalled();
 });

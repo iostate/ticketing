@@ -13,6 +13,9 @@ export class OrderCreatedListener extends Listener<OrderCreatedEvent> {
   queueGroupName = queueGroupName;
 
   async onMessage(data: OrderCreatedEvent['data'], msg: Message) {
+    // console.log(`order Created: ${JSON.stringify(data)}`);
+    console.log(`order Created: ${JSON.stringify(data)}`);
+
     const ticket = await Ticket.findById(data.ticket.id);
     // Perform some logic to reserve this ticket
     if (!ticket) {
@@ -23,20 +26,34 @@ export class OrderCreatedListener extends Listener<OrderCreatedEvent> {
       orderId: data.id,
     });
     await ticket.save();
+    console.log(`order Created ticket: ${ticket}`);
 
-    /**
-     * Publish an event to TicketUpdatedPublisher that sends orderId.
-     * orderId present on the Ticket in Tickets Service represents that it
-     * has an owner and the Ticket is reserved.
-     */
-    await new TicketUpdatedPublisher(this.client).publish({
+    const dataToSend = {
       id: ticket.id,
       orderId: ticket.orderId,
       version: ticket.version,
       title: ticket.title,
       price: ticket.price,
       userId: ticket.userId,
-    });
+    };
+
+    console.log(`order Created data: ${JSON.stringify(dataToSend)}`);
+    /**
+     * Publish an event to TicketUpdatedPublisher that sends orderId.
+     * orderId present on the Ticket in Tickets Service represents that it
+     * has an owner and the Ticket is reserved.
+     */
+    await new TicketUpdatedPublisher(this.client).publish(
+      dataToSend
+      // {
+      // id: ticket.id,
+      // orderId: ticket.orderId,
+      // version: ticket.version,
+      // title: ticket.title,
+      // price: ticket.price,
+      // userId: ticket.userId,
+      // }
+    );
 
     msg.ack();
   }
