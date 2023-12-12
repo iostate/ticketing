@@ -8,7 +8,11 @@ import { TicketDoc, Ticket } from '../models/ticket';
 declare global {
   var signin: () => string[];
   var buildTicket: () => Promise<TicketDoc>;
+  // @ts-ignore
+  // var structuredClone: () => {};
 }
+
+// global.structuredClone = function () {};
 
 global.buildTicket = async function (): Promise<TicketDoc> {
   /**

@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 import { OrderStatus } from '@sgtickets3/common';
 import { TicketDoc } from './ticket';
 export { OrderStatus };
@@ -45,8 +46,8 @@ const orderSchema = new mongoose.Schema(
   {
     // TODO: Working on applying a different approach to optimistic concurrency
     // control
-    optimisticConcurrency: true,
-    versionKey: 'version',
+    // optimisticConcurrency: true,
+    // versionKey: 'version',
     toJSON: {
       transform(doc, ret) {
         ret.id = ret._id;
@@ -55,6 +56,8 @@ const orderSchema = new mongoose.Schema(
     },
   }
 );
+orderSchema.set('versionKey', 'version');
+orderSchema.plugin(updateIfCurrentPlugin);
 orderSchema.statics.build = (attrs: OrderAttrs) => {
   return new Order(attrs);
 };

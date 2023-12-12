@@ -6,13 +6,17 @@ interface TicketAttrs {
   id: string;
   title: string;
   price: number;
+  orderId?: string;
 }
 
 export interface TicketDoc extends mongoose.Document {
   title: string;
   price: number;
   version: number;
-  // orderId?: string;
+  orderId?: string;
+  // needed to increment version since Mongoose OCC doesn't update if fields aren't updated
+  // trigger OCC to occur by flipping the boolean
+  occTrigger?: boolean;
   isReserved(): Promise<boolean>;
   userId: string;
 }
@@ -37,12 +41,15 @@ const ticketSchema = new mongoose.Schema(
       type: mongoose.Types.ObjectId,
       required: false,
     },
+    occTrigger: {
+      type: Boolean,
+    },
   },
   {
     // TODO: Working on applying a different approach to optimistic concurrency
     // control
-    optimisticConcurrency: true,
-    versionKey: 'version',
+    // optimisticConcurrency: true,
+    // versionKey: 'version',
     toJSON: {
       transform(doc, ret) {
         ret.id = ret._id;
@@ -51,6 +58,8 @@ const ticketSchema = new mongoose.Schema(
     },
   }
 );
+ticketSchema.set('versionKey', 'version');
+ticketSchema.plugin(updateIfCurrentPlugin);
 
 ticketSchema.statics.findByEvent = (event: { id: string; version: number }) => {
   return Ticket.findOne({

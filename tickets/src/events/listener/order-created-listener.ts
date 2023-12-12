@@ -14,9 +14,10 @@ export class OrderCreatedListener extends Listener<OrderCreatedEvent> {
 
   async onMessage(data: OrderCreatedEvent['data'], msg: Message) {
     // console.log(`order Created: ${JSON.stringify(data)}`);
-    console.log(`order Created: ${JSON.stringify(data)}`);
+    console.log(`BEGIN OrderCreatedListener. Order Created: ${JSON.stringify(data)}\n`);
 
     const ticket = await Ticket.findById(data.ticket.id);
+    console.log(`CURRENT OrderCreatedListener: \n ${ticket}\n`);
     // Perform some logic to reserve this ticket
     if (!ticket) {
       throw new Error('ticket was not found inside OrderCreatedListener');
@@ -26,7 +27,7 @@ export class OrderCreatedListener extends Listener<OrderCreatedEvent> {
       orderId: data.id,
     });
     await ticket.save();
-    console.log(`order Created ticket: ${ticket}`);
+    // console.log(`order Created ticket: ${ticket}`);
 
     const dataToSend = {
       id: ticket.id,
@@ -37,7 +38,9 @@ export class OrderCreatedListener extends Listener<OrderCreatedEvent> {
       userId: ticket.userId,
     };
 
-    console.log(`order Created data: ${JSON.stringify(dataToSend)}`);
+    console.log(
+      `END OrderCreatedListener. Order Created: ${JSON.stringify(dataToSend)}\n`
+    );
     /**
      * Publish an event to TicketUpdatedPublisher that sends orderId.
      * orderId present on the Ticket in Tickets Service represents that it

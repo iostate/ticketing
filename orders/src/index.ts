@@ -6,6 +6,7 @@ import { app } from './app';
 import { natsWrapper } from './nats-wrapper';
 import { TicketCreatedListener } from './events/listener/ticket-created-listener';
 import { TicketUpdatedListener } from './events/listener/ticket-updated-listener';
+import { ExpirationCompleteListener } from './events/listener/expiration-complete-listener';
 
 /**
  * Start the Mongoose server.
@@ -78,6 +79,8 @@ const startNats = async () => {
     const tcl = new TicketCreatedListener(natsWrapper.client).listen();
     // Start TicketUpdatedListener
     const tul = new TicketUpdatedListener(natsWrapper.client).listen();
+    // Start ExpirationCompleteListener
+    const ecl = new ExpirationCompleteListener(natsWrapper.client).listen();
   } catch (err) {
     console.log('NATS failed to start...');
     console.error(err);
