@@ -4,9 +4,19 @@ import { app } from './app';
 
 // import natsWrapper
 import { natsWrapper } from './nats-wrapper';
+import { TicketCreatedListener } from './events/listener/ticket-created-listener';
+import { TicketUpdatedListener } from './events/listener/ticket-updated-listener';
+import { ExpirationCompleteListener } from './events/listener/expiration-complete-listener';
 
-// start the mongoose server
-const start = async () => {
+/**
+ * Start the Mongoose server.
+ * Checks the Environment variables.
+ *
+ * NOTE: ENV Variables are set in Kubernetes
+ *
+ * This service requires a JSONWEBTOKEN key in order to decrypt payloads.
+ */
+const startMongoose = async () => {
   if (!process.env.JWT_KEY) {
     throw new Error('JWT_KEY must be defined');
   }
@@ -15,6 +25,20 @@ const start = async () => {
     throw new Error('MONGO_URI must be defined');
   }
 
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log('Connected to MongoDb');
+  } catch (err) {
+    console.log('Mongoose failed to start...');
+    console.log(err);
+  }
+};
+
+/**
+ * Starts NATS Streaming Server.
+ * Checks for Environment Variables
+ */
+const startNats = async () => {
   if (!process.env.NATS_CLUSTER_ID) {
     throw new Error('NATS_CLUSTER_ID must be defined');
   }
@@ -51,9 +75,14 @@ const start = async () => {
       process.exit();
     });
 
-    await mongoose.connect(process.env.MONGO_URI);
-    console.log('Connected to MongoDb');
+    // Start TicketCreatedListener
+    const tcl = new TicketCreatedListener(natsWrapper.client).listen();
+    // Start TicketUpdatedListener
+    const tul = new TicketUpdatedListener(natsWrapper.client).listen();
+    // Start ExpirationCompleteListener
+    const ecl = new ExpirationCompleteListener(natsWrapper.client).listen();
   } catch (err) {
+    console.log('NATS failed to start...');
     console.error(err);
   }
 };
@@ -62,4 +91,5 @@ app.listen(3000, () => {
   console.log('Listening on port 3000.........');
 });
 
-start();
+startMongoose();
+startNats();

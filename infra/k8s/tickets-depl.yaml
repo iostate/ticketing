@@ -16,9 +16,9 @@ spec:
         - name: tickets
           image: quanological/tickets
           # resources:
-          #   limits:
-          #     cpu: 1gb
-          #     memory: 256mb
+            # limits:
+              # cpu: 256mb
+              # memory: 128mb
           env:
             - name: NATS_CLIENT_ID
               valueFrom:

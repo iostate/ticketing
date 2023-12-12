@@ -1,89 +1,29 @@
-// import mongoose from 'mongoose';
-// import { Order, OrderStatus } from './order';
-
-// interface TicketAttrs {
-//   title: string;
-//   price: number;
-// }
-
-// export interface TicketDoc extends mongoose.Document {
-//   title: string;
-//   price: number;
-//   isReserved(): Promise<boolean>;
-// }
-
-// interface TicketModel extends mongoose.Model<TicketDoc> {
-//   build(attrs: TicketAttrs): TicketDoc;
-// }
-
-// const ticketSchema = new mongoose.Schema(
-//   {
-//     title: {
-//       type: String,
-//       required: true,
-//     },
-//     price: {
-//       type: Number,
-//       required: true,
-//     },
-//   },
-//   {
-//     toJSON: {
-//       transform(doc, ret) {
-//         ret.id = ret._id;
-//         delete ret._id;
-//       },
-//     },
-//   }
-// );
-
-// // Add a function to the TicketModel itself
-// ticketSchema.statics.build = (attrs: TicketAttrs) => {
-//   return new Ticket(attrs);
-// };
-
-// // Add a new method to a Document using methods
-// /**
-//  * isReserved checks whether an existing ticket is reserved already.
-//  * A ticket is reserved if it has an associated order with it.
-//  */
-// ticketSchema.methods.isReserved = async function () {
-//   // find the ticket by id
-//   // const ticket = await Ticket.findOne()
-
-//   const existingOrder = await Order.findOne({
-//     ticket: this,
-//     status: {
-//       // Check for status that are *NOT* completed
-//       $in: [OrderStatus.Created, OrderStatus.AwaitingPayment, OrderStatus.Complete],
-//     },
-//   });
-
-//   // !(null) == true
-//   // !(!(null)) == false
-//   return !!existingOrder;
-// };
-
-// const Ticket = mongoose.model<TicketDoc, TicketModel>('Ticket', ticketSchema);
-
-// export { Ticket };
-
 import mongoose from 'mongoose';
+import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 import { Order, OrderStatus } from './order';
 
 interface TicketAttrs {
+  id: string;
   title: string;
   price: number;
+  orderId?: string;
 }
 
 export interface TicketDoc extends mongoose.Document {
   title: string;
   price: number;
+  version: number;
+  orderId?: string;
+  // needed to increment version since Mongoose OCC doesn't update if fields aren't updated
+  // trigger OCC to occur by flipping the boolean
+  occTrigger?: boolean;
   isReserved(): Promise<boolean>;
+  userId: string;
 }
 
 interface TicketModel extends mongoose.Model<TicketDoc> {
   build(attrs: TicketAttrs): TicketDoc;
+  findByEvent(event: { id: string; version: number }): Promise<TicketDoc | null>;
 }
 
 const ticketSchema = new mongoose.Schema(
@@ -97,8 +37,19 @@ const ticketSchema = new mongoose.Schema(
       required: true,
       min: 0,
     },
+    orderId: {
+      type: mongoose.Types.ObjectId,
+      required: false,
+    },
+    occTrigger: {
+      type: Boolean,
+    },
   },
   {
+    // TODO: Working on applying a different approach to optimistic concurrency
+    // control
+    // optimisticConcurrency: true,
+    // versionKey: 'version',
     toJSON: {
       transform(doc, ret) {
         ret.id = ret._id;
@@ -107,10 +58,24 @@ const ticketSchema = new mongoose.Schema(
     },
   }
 );
+ticketSchema.set('versionKey', 'version');
+ticketSchema.plugin(updateIfCurrentPlugin);
+
+ticketSchema.statics.findByEvent = (event: { id: string; version: number }) => {
+  return Ticket.findOne({
+    _id: event.id,
+    version: event.version - 1,
+  });
+};
 
 ticketSchema.statics.build = (attrs: TicketAttrs) => {
-  return new Ticket(attrs);
+  return new Ticket({
+    _id: attrs.id,
+    title: attrs.title,
+    price: attrs.price,
+  });
 };
+
 ticketSchema.methods.isReserved = async function () {
   // this === the ticket document that we just called 'isReserved' on
   const existingOrder = await Order.findOne({

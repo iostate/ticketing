@@ -13,7 +13,8 @@ jest.mock('../nats-wrapper');
 let mongo: any;
 // runs before all tests
 beforeAll(async () => {
-  jest.clearAllMocks();
+  process.env.JWT_KEY = 'asdfasdf';
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
   mongo = await MongoMemoryServer.create();
   const uri = mongo.getUri();
   await mongoose.connect(uri, {});
@@ -21,8 +22,8 @@ beforeAll(async () => {
 
 // runs before every test
 beforeEach(async () => {
-  process.env.JWT_KEY = 'asdfasdf';
-  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+  jest.clearAllMocks();
+
   const collections = await mongoose.connection.db.collections();
 
   for (let collection of collections) {

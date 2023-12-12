@@ -1,25 +1,22 @@
 import mongoose from 'mongoose';
+import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 
-// An interface that describes the properties
-// that are requried to create a new User
 interface TicketAttrs {
   title: string;
   price: number;
   userId: string;
 }
 
-// An interface that describes the properties
-// that a Ticket Model has
-interface TicketModel extends mongoose.Model<TicketDoc> {
-  build(attrs: TicketAttrs): TicketDoc;
-}
-
-// An interface that describes the properties
-// that a Ticket Document has
 interface TicketDoc extends mongoose.Document {
   title: string;
   price: number;
   userId: string;
+  version: number;
+  orderId?: string;
+}
+
+interface TicketModel extends mongoose.Model<TicketDoc> {
+  build(attrs: TicketAttrs): TicketDoc;
 }
 
 const ticketSchema = new mongoose.Schema(
@@ -36,8 +33,15 @@ const ticketSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    orderId: {
+      type: String,
+    },
   },
   {
+    // TODO: Working on applying a different approach to optimistic concurrency
+    // control
+    // optimisticConcurrency: true,
+    // versionKey: 'version',
     toJSON: {
       transform(doc, ret) {
         ret.id = ret._id;
@@ -46,11 +50,8 @@ const ticketSchema = new mongoose.Schema(
     },
   }
 );
-
-// run some code before saving
-// ticketSchema.pre('save', async function (done) {
-//   done();
-// });
+ticketSchema.set('versionKey', 'version');
+ticketSchema.plugin(updateIfCurrentPlugin);
 
 ticketSchema.statics.build = (attrs: TicketAttrs) => {
   return new Ticket(attrs);

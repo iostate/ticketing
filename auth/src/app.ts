@@ -3,7 +3,6 @@ import 'express-async-errors';
 import { json } from 'body-parser';
 import mongoose from 'mongoose';
 import cookieSession from 'cookie-session';
-
 // Routes
 import { currentUserRouter } from './routes/current-user';
 import { signinRouter } from './routes/signin';
