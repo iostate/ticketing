@@ -69,4 +69,11 @@ build:
         manual:
           - src: 'src/**/*.ts'
             dest: .
-      
+    - image: quanological/payments
+      context: payments
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "src/**/*.ts"
+            dest: .
