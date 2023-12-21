@@ -1,9 +1,5 @@
 **/node_modules
- auth/csr.pem
-auth/key.pem
-auth/server.crt
-auth/csr.pem
+.DS_Store
 auth/src/local-index.ts
-auth/src/middlewares/verify-jwt.ts
 event-bus/
-theirs_nats-test/
+integration-test/

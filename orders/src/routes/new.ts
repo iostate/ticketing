@@ -30,7 +30,6 @@ router.post(
   ],
   validateRequest,
   async (req: Request, res: Response) => {
-    console.log('here');
     const { ticketId } = req.body;
 
     // Find the ticket the user is trying to order in the database
@@ -45,20 +44,9 @@ router.post(
       throw new BadRequestError('Ticket is already reserved');
     }
 
-    console.log('here1');
     // Calculate an expiration date for this order
     const expiration = new Date();
     expiration.setSeconds(expiration.getSeconds() + EXPIRATION_WINDOW_SECONDS);
-    console.log('here2');
-    // Print current time
-    const currentDate = new Date();
-    console.log(currentDate);
-    console.log(expiration.getTime());
-    console.log('here3');
-
-    console.log(
-      `currentTime - expiration = ${expiration.getTime() - currentDate.getTime()}`
-    );
 
     // Build the order and save it to the database
     const order = Order.build({
