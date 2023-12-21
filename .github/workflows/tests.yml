@@ -5,7 +5,7 @@ name: tests
 # Controls when the action will run. Workflow runs when manually triggered using the UI
 # or API.
 on:
-  pull_request
+  pull_request:
   
   # workflow_dispatch:
   #   # Inputs the workflow accepts.
@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     steps: 
       - uses: actions/checkout@v2
-      - run: cd auth && npm install & npm run test:ci
+      - run: cd auth && npm install && npm run test:ci
   # This workflow contains a single job called "greet"
   # greet:
   #   # The type of runner that the job will run on
