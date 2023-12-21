@@ -4,8 +4,8 @@ import { app } from './app';
 
 // import natsWrapper
 import { natsWrapper } from './nats-wrapper';
-import { OrderCreatedListener } from './events/order-created-listener';
-import { OrderCancelledListener } from './events/order-cancelled-listener';
+import { OrderCreatedListener } from './events/listeners/order-created-listener';
+import { OrderCancelledListener } from './events/listeners/order-cancelled-listener';
 // start the mongoose server
 const start = async () => {
   if (!process.env.JWT_KEY) {

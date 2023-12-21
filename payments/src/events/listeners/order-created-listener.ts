@@ -1,7 +1,7 @@
 import { Listener, OrderCreatedEvent, OrderStatus, Subjects } from '@sgtickets3/common';
-import { queueGroupName } from './queue-group-name';
+import { queueGroupName } from '../queue-group-name';
 import { Message } from 'node-nats-streaming';
-import { Order } from '../models/order';
+import { Order } from '../../models/order';
 export class OrderCreatedListener extends Listener<OrderCreatedEvent> {
   queueGroupName: string = queueGroupName;
   subject: Subjects.OrderCreated = Subjects.OrderCreated;

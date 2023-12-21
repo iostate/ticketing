@@ -1,6 +1,7 @@
 import { OrderCancelledEvent, Listener, Subjects, OrderStatus } from '@sgtickets3/common';
 import { Message } from 'node-nats-streaming';
-import { Order } from '../models/order';
+import { Order } from '../../models/order';
+import { queueGroupName } from '../queue-group-name';
 
 /**
  * Order cancelled?
@@ -10,7 +11,7 @@ import { Order } from '../models/order';
 export class OrderCancelledListener extends Listener<OrderCancelledEvent> {
   subject: Subjects.OrderCancelled = Subjects.OrderCancelled;
 
-  queueGroupName: string = this.queueGroupName;
+  queueGroupName: string = queueGroupName;
 
   async onMessage(data: OrderCancelledEvent['data'], msg: Message) {
     const {

@@ -8,6 +8,7 @@ import { currentUser } from '@sgtickets3/common';
 import { errorHandler } from '@sgtickets3/common';
 import { NotFoundError } from '@sgtickets3/common';
 
+import { createChargeRouter } from './routes/new';
 const app = express();
 
 app.use(json());
@@ -39,6 +40,7 @@ app.use(
 // user must be verified to access the following routers
 app.use(currentUser);
 // ROUTES
+app.use(createChargeRouter);
 
 // CATCH ALL ROUTE
 app.all('*', async (req, res) => {

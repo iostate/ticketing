@@ -7,7 +7,7 @@ import { app } from '../app';
 import structuredClone from '@ungap/structured-clone';
 
 declare global {
-  var signin: () => string[];
+  var signin: (id?: string) => string[];
   // var structuredClone: any;
 }
 
@@ -26,6 +26,9 @@ declare global {
 // });
 
 jest.mock('../nats-wrapper');
+
+process.env.STRIPE_KEY =
+  'sk_test_51ON3z8KSF9LQbi9FcxGNEHB6MwykO1suvUSLMahq8d2KnuusBUZH3WAsRDdWViin9jpiRC3TYhXleK1YTJIYrAMN00Y3bQOBB9';
 
 let mongo: any;
 // runs before all tests
@@ -55,11 +58,11 @@ afterAll(async () => {
   await mongoose.connection.close();
 });
 
-global.signin = () => {
+global.signin = (id?: string) => {
   // Needs to ultimately set a currentUser property on the request
   // Create payload
   const payload = {
-    id: new mongoose.Types.ObjectId().toHexString(),
+    id: id || new mongoose.Types.ObjectId().toHexString(),
     email: 'valid@email.com',
   };
 

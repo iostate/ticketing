@@ -19,6 +19,7 @@
 #   rawYaml:
 #     - ./infra/k8s/*
 apiVersion: skaffold/v4beta6
+# apiVersion: skaffold/v2.8.0
 kind: Config
 manifests:
   rawYaml:

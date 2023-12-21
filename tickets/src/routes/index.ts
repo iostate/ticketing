@@ -5,7 +5,9 @@ import { NotFoundError } from '@sgtickets3/common';
 const router = express.Router();
 
 router.get('/api/tickets', async (req: Request, res: Response) => {
-  const allTickets = await Ticket.find();
+  const allTickets = await Ticket.find({
+    orderId: undefined,
+  });
   res.status(200).json(allTickets);
 });
 
