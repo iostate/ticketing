@@ -6,6 +6,7 @@
   "scripts": {
     "start": "ts-node-dev --poll src/index.ts",
     "test": "jest --watchAll --no-cache",
+    "test:ci": "jest",
     "listen": "ts-node-dev --notify --rs src/ticketCreatedListener.ts"
   },
   "jest": {
@@ -32,7 +33,13 @@
     "mongoose-update-if-current": "^1.4.0",
     "pino-http": "^8.5.1",
     "ts-node-dev": "^2.0.0",
-    "typescript": "^5.0.4"
+    "typescript": "^5.0.4",
+    "@types/jest": "^29.5.3",
+    "@types/supertest": "^2.0.12",
+    "jest": "^29.6.1",
+    "ts-jest": "^29.1.1",
+    "mongodb-memory-server": "^8.13.0",
+    "supertest": "^6.3.3"
   },
   "devDependencies": {
     "@types/cookie-session": "^2.0.44",

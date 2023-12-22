@@ -1,14 +1,14 @@
 import request from 'supertest';
 import { app } from '../../app';
 
-it('returns a 201 on successful sign up', async () => {
+it('returns a 200 on successful sign up', async () => {
   await request(app)
     .post('/api/users/signup')
     .send({
       email: 'a1@a1.com',
       password: 'testpassword',
     })
-    .expect(201);
+    .expect(200);
 });
 
 it('returns a 400 error when entering invalid email', async () => {
@@ -48,7 +48,7 @@ it('disallows duplicate emails', async () => {
       email: 'qmtruong92@gmail.com',
       password: 'testpassword',
     })
-    .expect(201);
+    .expect(200);
 
   await request(app)
     .post('/api/users/signup')

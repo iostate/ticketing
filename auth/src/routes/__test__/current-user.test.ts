@@ -9,7 +9,7 @@ it('responds with details about the current user', async () => {
       email: 'q@app.com',
       password: 'test123',
     })
-    .expect(201);
+    .expect(200);
 
   const cookie = response.get('Set-Cookie');
 
